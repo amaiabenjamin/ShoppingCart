@@ -1,0 +1,54 @@
+// Название файла: shoppingCart.ts
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+class ShoppingCart {
+  private items: CartItem[];
+
+  constructor() {
+    this.items = [];
+  }
+
+  public addItem(item: CartItem): void {
+    const existingItem = this.items.find((i) => i.id === item.id);
+
+    if (existingItem) {
+      existingItem.quantity += item.quantity;
+    } else {
+      this.items.push(item);
+    }
+  }
+
+  public removeItem(itemId: number): void {
+    const index = this.items.findIndex((item) => item.id === itemId);
+
+    if (index !== -1) {
+      this.items.splice(index, 1);
+    }
+  }
+
+  public getTotalPrice(): number {
+    return this.items.reduce((total, item) => total + item.price * item.quantity, 0);
+  }
+
+  public printCart(): void {
+    console.log("Shopping Cart:");
+    this.items.forEach((item) => {
+      console.log(`- ${item.name} (Quantity: ${item.quantity}, Price: $${item.price})`);
+    });
+    console.log(`Total Price: $${this.getTotalPrice()}`);
+  }
+}
+
+// Пример использования класса ShoppingCart:
+const cart = new ShoppingCart();
+cart.addItem({ id: 1, name: "Product A", price: 10, quantity: 2 });
+cart.addItem({ id: 2, name: "Product B", price: 15, quantity: 1 });
+cart.addItem({ id: 1, name: "Product A", price: 10, quantity: 3 }); // Увеличение количества существующего товара
+cart.removeItem(2); // Удаление товара по идентификатору
+cart.printCart();
